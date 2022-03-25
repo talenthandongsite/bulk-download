@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="m-2">
+        <h1 id="title">Bulk File Download</h1>
+        <p id="desc-application">Type in following url and pattern to bulk download file</p>
+        <div class="form-group relative">
+            <label class="form-label mt-4">URL</label>
+            <div class="input-group mb-3">
+                <input id="input-prefix" type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                <span class="input-group-text">{{ some pattern }}</span>
+                <input id="input-suffix" type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                <div id="url-invalid" class="absolute invalid-feedback mt-2p5rem">-</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label mt-4">Pattern</label>
+            <div>
+                <a id="pattern-button" class="dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Select Pattern</a>
+                <div id="pattern-menu" class="dropdown-menu"></div>
+            </div>
+            <div id="pattern-discription" class="text-info">-</div>
+            <div class="input-group mb-3 relative">
+                <input id="input-start" type="text" class="form-control">
+                <span id="input-middle" class="input-group-text">~</span>
+                <input id="input-end" type="text" class="form-control">
+                <div id="pattern-invalid" class="absolute invalid-feedback mt-2p5rem">-</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label mt-4">Preview</label>
+            <div class="card bg-light mb-3" style="height: 15em;">
+                <div class="card-body overflow-scroll">
+                    <p id="preview-text" class="card-text" style="word-break: break-all;">-</p>
+                </div>
+            </div>
+        </div>
+        <div class="d-grid gap-2">
+            <button id="submit" class="btn btn-lg btn-primary" type="button">Bulk Download</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

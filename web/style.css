@@ -1,0 +1,19 @@
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.mt-2p5rem {
+    margin-top: 2.5rem; 
+}
+
+.overflow-scroll {
+    overflow: scroll;
+}
+
+.text-over-ellipsis {
+    text-overflow: ellipsis;
+}
