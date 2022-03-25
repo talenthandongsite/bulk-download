@@ -1,0 +1,5 @@
+**/*.pdf
+cache
+.DS_Store
+bulk-download
+client_secret.json
