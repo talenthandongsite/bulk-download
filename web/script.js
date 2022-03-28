@@ -46,7 +46,7 @@ var buttonDisabledClassName = 'disabled';
 var inputDisabledAttrName = 'disabled';
 var urlValidationRegex = /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
-var backendUrl = 'http://localhost:3000/download'
+var backendUrl = 'http://talent-handong.site/download/request'
 
 // # Pattern Business Logic
 // - define pattern business logic

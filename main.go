@@ -40,12 +40,13 @@ func InitHttpHandler() *http.ServeMux {
 	mux := http.NewServeMux()
 
 	// Server or handler
-	fs := http.StripPrefix("/web/", http.FileServer(http.Dir("./web/")))
+	fs := http.FileServer(http.Dir("./web/"))
+	// fs := http.StripPrefix("/web/", http.FileServer(http.Dir("./web/")))
 
 	// register handlers to multiplexer
-	mux.HandleFunc("/", healthCheck)
-	mux.Handle("/web/", fs)
-	mux.HandleFunc("/download", bulkDownload)
+	// mux.HandleFunc("/", healthCheck)
+	mux.Handle("/", fs)
+	mux.HandleFunc("/request", bulkDownload)
 
 	return mux
 }
@@ -58,7 +59,7 @@ func healthCheck(w http.ResponseWriter, r *http.Request) {
 func bulkDownload(w http.ResponseWriter, r *http.Request) {
 	// check method
 	if r.Method != http.MethodPost {
-		err := errors.New("download: method not allowed")
+		err := errors.New("download: method not allowed - " + r.Method)
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusMethodNotAllowed)
 		return
