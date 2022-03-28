@@ -40,11 +40,11 @@ func InitHttpHandler() *http.ServeMux {
 	mux := http.NewServeMux()
 
 	// Server or handler
-	fs := http.StripPrefix("/app/", http.FileServer(http.Dir("./web/")))
+	fs := http.StripPrefix("/web/", http.FileServer(http.Dir("./web/")))
 
 	// register handlers to multiplexer
 	mux.HandleFunc("/", healthCheck)
-	mux.Handle("/app/", fs)
+	mux.Handle("/web/", fs)
 	mux.HandleFunc("/download", bulkDownload)
 
 	return mux
