@@ -34,7 +34,7 @@ jobs:
           script_stop: true
           envs: DOCKER_NETWORK
           script: |
-            cd ~/.github/server-api
+            cd ~/.github/bulk-download
             git checkout master
             git stash
             git pull origin master
