@@ -440,6 +440,8 @@ function requestBulkDownload() {
             setDownload();
             return
         }
+
+        console.log(xhr.readyState, xhr.status)
         
         alert("Something went wrong! Contact Administrator");
     }
