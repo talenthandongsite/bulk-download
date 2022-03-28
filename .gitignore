@@ -1,4 +1,6 @@
 **/*.pdf
+**/*.png
+
 cache
 .DS_Store
 bulk-download
