@@ -8,7 +8,7 @@ RUN go build -o app
 FROM alpine:latest  
 WORKDIR /root/
 COPY web/ ./web/
-COPY cache/ ./cache/
+RUN mkdir -p ./cache
 COPY --from=builder /build/app ./
 ENTRYPOINT ./app
 EXPOSE 3000
