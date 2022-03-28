@@ -438,12 +438,16 @@ function requestBulkDownload() {
             download.download = fileName;
 
             setDownload();
-            return
+            return;
         }
 
-        console.log(xhr.readyState, xhr.status)
-        
-        alert("Something went wrong! Contact Administrator");
+        if (xhr.readyState == 4 && xhr.status != 200) {
+            alert("Something went wrong! Contact Administrator");
+            resetDownload();
+            return;
+        }
+
+        // console.log(xhr.readyState, xhr.status)
     }
     xhr.responseType = "arraybuffer";
     xhr.send(JSON.stringify(request));
