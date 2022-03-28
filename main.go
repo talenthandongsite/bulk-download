@@ -51,11 +51,6 @@ func InitHttpHandler() *http.ServeMux {
 	return mux
 }
 
-// Health check handler for root path
-func healthCheck(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("[BULK SERVICE] Server is good."))
-}
-
 func bulkDownload(w http.ResponseWriter, r *http.Request) {
 	// check method
 	if r.Method != http.MethodPost {
@@ -81,7 +76,7 @@ func bulkDownload(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
-	var limit int = 50
+	var limit int = 100
 	// Validation, for now, only length of string
 	if len(input.Pattern) > limit {
 		err := errors.New("download: limit exceeded")
