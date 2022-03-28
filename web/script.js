@@ -22,26 +22,31 @@ var inputEnd = document.getElementById('input-end');
 var patternInvalid = document.getElementById('pattern-invalid');
 var previewText = document.getElementById('preview-text');
 var submit = document.getElementById('submit');
+var reset = document.getElementById('reset');
+var download = document.getElementById('download');
 
 // ## State Variables
 var patternList = [];
 var currentPattern = '';
-var currentValid = false;
 var currentUrlValid = false;
 var currentPatternValid = false;
 var currentLang = 'en';
+var isDownload = false;
 
 var inputPrefixPrestine = true;
 var inputSuffixPrestine = true;
 var inputStartPrestine = true;
 var inputEndPrestine = true;
 
-// ## Others 
+// ## Constants 
+var displayNoneClassName = 'd-none';
 var dropdownDisplayClassName = 'show';
 var inputInvalidClassName = 'is-invalid';
 var buttonDisabledClassName = 'disabled';
 var inputDisabledAttrName = 'disabled';
 var urlValidationRegex = /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+
+var backendUrl = 'http://localhost:3000/download'
 
 // # Pattern Business Logic
 // - define pattern business logic
@@ -56,11 +61,12 @@ var integerPattern = {
         en: 'Set range with integer (ex: 1029~1120)',
         ko: '정수로 범위를 지정합니다 (예시: 1029~1120)',
     },
-    validatior: [
+    validator: [
         startRequiredValidator,
         endRequiredValidator,
         integerRangeValidator,
-        inputLengthLimitValidator(32)
+        inputLengthLimitValidator(32),
+        fileCountLimitValidator(100)
     ],
     mapper: function (prefix, suffix, start, end) {
         var _start = parseInt(start);
@@ -84,9 +90,10 @@ var enumPattern = {
         en: 'Without using range or pattern, enumerate all element with delimiters(,.- or space, line feeds, tabs)',
         ko: '범위나 패턴을 지정하지 않고 열거합니다. 구분자(,. 혹은 띄워쓰기, 줄바꿈, 탭)를 사용하여 구분합니다.',
     },
-    validatior: [
+    validator: [
         startRequiredValidator,
-        inputLengthLimitValidator(2048)
+        inputLengthLimitValidator(2048),
+        fileCountLimitValidator(100)
     ],
     mapper: function(prefix, suffix, start, end) {
         var mapped = [];
@@ -123,6 +130,8 @@ patternList.forEach(function(pattern) {
 inputStart.setAttribute(inputDisabledAttrName, '');
 inputEnd.setAttribute(inputDisabledAttrName, '');
 submit.classList.add(buttonDisabledClassName);
+reset.classList.add(displayNoneClassName);
+download.classList.add(displayNoneClassName);
 
 // # Event Block
 // - event block is to register event handlers
@@ -139,12 +148,7 @@ window.onclick = function(event) {
     }
 
     if (event.target == submit) {
-        if (currentUrlValid && currentPatternValid) {
-            var mapper = patternList.filter(function(elem) { return elem.value == currentPattern })[0].mapper; 
-            var mapped = mapper(inputPrefix.value, inputSuffix.value, inputStart.value, inputEnd.value);
-
-            console.log(mapped);
-        }
+        requestBulkDownload();
     }
 }
 
@@ -160,13 +164,14 @@ window.onkeydown = function(event) {
         if (event.target == inputPrefix || event.target == inputSuffix) {
             if (event.target == inputPrefix && inputPrefixPrestine) inputPrefixPrestine = false;
             if (event.target == inputSuffix && inputSuffixPrestine) inputSuffixPrestine = false;
-            evaluateUrlForm() 
+            evaluateUrlForm();
         }
         if (event.target == inputStart || event.target == inputEnd) {
             if (event.target == inputStart && inputStartPrestine) inputStartPrestine = false;
             if (event.target == inputEnd && inputEndPrestine) inputEndPrestine = false;
             evaluatePatternForm();
         }
+        resetDownload();
         renderPreviewSubmit();
     }, 100);
 }
@@ -208,8 +213,6 @@ function endRequiredValidator(_, end) {
     };
 }
 
-
-
 function integerRangeValidator(start, end) {
     var numericMessage = {
         en: 'Please type number value',
@@ -237,6 +240,20 @@ function inputLengthLimitValidator(startMaxLength, endMaxLength) {
         if (('' + start).length > startMaxLength) return message;
         if (('' + end).length > endMaxLength) return message;
         return null;
+    }
+}
+
+function fileCountLimitValidator(limit) {
+    return function(start, end, self) {
+        var length = self.mapper('', '', start, end).length; 
+        if (length <= limit) {
+            return null;
+        }
+
+        return {
+            en: 'File limit had exceeded: (' + length + '/' + limit + ')',
+            ko: '파일 갯수가 초과되었습니다: (' + length + '/' + limit + ')'
+        } 
     }
 }
 
@@ -296,9 +313,9 @@ function evaluateUrlForm() {
 }
 
 function evaluatePatternForm() {
-    var validator = patternList.filter(function(elem) { return elem.value == currentPattern })[0].validatior;
-    invalidMessage = validator.map(function(elem) { 
-        return elem(inputStart.value, inputEnd.value);
+    var targetPattern = patternList.filter(function(elem) { return elem.value == currentPattern })[0];
+    invalidMessage = targetPattern.validator.map(function(elem) { 
+        return elem(inputStart.value, inputEnd.value, targetPattern);
     }).reduce(function(prev, curr, _) {
         if (prev != null) return prev;
         return curr;
@@ -332,6 +349,11 @@ function renderPreviewSubmit() {
 
         previewText.innerHTML = 'Total: ' + mapped.length + '<br><br>' + mapped.join('<br>');
     }
+}
+
+function getEnumeratedValue() {
+    var mapper = patternList.filter(function(elem) { return elem.value == currentPattern })[0].mapper; 
+    return mapper('', '', inputStart.value, inputEnd.value);
 }
 
 function getMappedValue() {
@@ -368,4 +390,59 @@ function cleanUpPatternInput() {
     inputEnd.value = '';
     inputStartPrestine = true;
     inputEndPrestine = true;
+}
+
+function setDownload() {
+    if (isDownload) {
+        return;
+    }
+    isDownload = true;
+    submit.classList.add(displayNoneClassName);
+    reset.classList.remove(displayNoneClassName);
+    download.classList.remove(displayNoneClassName);
+}
+
+function resetDownload() {
+    if (!isDownload) {
+        return;
+    }
+    isDownload = false;
+    submit.classList.remove(displayNoneClassName);
+    reset.classList.add(displayNoneClassName);
+    download.classList.add(displayNoneClassName);
+}
+
+// ## Backend Request Functions
+function requestBulkDownload() {
+    if (!currentPatternValid || ! currentUrlValid) {
+        return;
+    }
+
+    var request = {
+        prefix: inputPrefix.value,
+        suffix: inputSuffix.value,
+        pattern: getEnumeratedValue()
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", backendUrl, true);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // alert("Failed to download:" + xhr.status + "---" + xhr.statusText);
+            var blob = new Blob([xhr.response], {type: "octet/stream"});
+            var fileName = "archive.zip";
+            var url = window.URL.createObjectURL(blob);
+            download.href = url;
+            download.download = fileName;
+
+            setDownload();
+            return
+        }
+        
+        alert("Something went wrong! Contact Administrator");
+    }
+    xhr.responseType = "arraybuffer";
+    xhr.send(JSON.stringify(request));
 }

@@ -1,19 +1,42 @@
 .relative {
-    position: relative;
+    position: relative !important;
 }
 
 .absolute {
-    position: absolute;
+    position: absolute !important;
 }
 
 .mt-2p5rem {
-    margin-top: 2.5rem; 
+    margin-top: 2.5rem !important; 
 }
 
 .overflow-scroll {
-    overflow: scroll;
+    overflow: scroll !important;
 }
 
 .text-over-ellipsis {
-    text-overflow: ellipsis;
+    text-overflow: ellipsis !important;
+}
+
+.a-btn {
+    text-align: center;
+    text-decoration-line: none;
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #373a3c;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 0;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }

@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="bootstrap.min.css">
 </head>
 <body>
     <div class="m-2">
@@ -43,8 +43,10 @@
                 </div>
             </div>
         </div>
-        <div class="d-grid gap-2">
-            <button id="submit" class="btn btn-lg btn-primary" type="button">Bulk Download</button>
+        <div class="d-flex gap-2">
+            <button id="submit" class="btn btn-lg btn-primary w-100" type="button">Submit</button>
+            <a id="reset" class="a-btn btn-lg btn-secondary w-100" onclick="location.reload()">Reset</a>
+            <a id="download" class="a-btn btn-lg btn-primary w-100">Download</a>
         </div>
     </div>
     <script src="script.js"></script>
