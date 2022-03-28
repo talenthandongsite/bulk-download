@@ -22,15 +22,22 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      - name: Execute deploy script
+        uses: appleboy/ssh-action@master
+        env: 
+          DOCKER_NETWORK: ${{ secrets.DOCKER_NETWORK }}
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_ACCESS_KEY }}
+          port: 22
+          script_stop: true
+          envs: DOCKER_NETWORK
+          script: |
+            cd ~/.github/server-api
+            git checkout master
+            git stash
+            git pull origin master
+            chmod 755 deployments/deploy.sh
+            export DOCKER_NETWORK
+            deployments/deploy.sh

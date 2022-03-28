@@ -31,7 +31,7 @@ func main() {
 	// start http server
 	log.Println("HTTP Server is listening on port " + PORT)
 
-	http.ListenAndServe("localhost:"+PORT, mux)
+	http.ListenAndServe(":"+PORT, mux)
 }
 
 func InitHttpHandler() *http.ServeMux {
