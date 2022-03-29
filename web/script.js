@@ -149,11 +149,9 @@ window.onclick = function(event) {
     } else {
         patternMenu.classList.remove(dropdownDisplayClassName);
     }
-
-    if (event.target == submit) {
-        requestBulkDownload();
-    }
 }
+
+submit.onclick = requestBulkDownload
 
 window.onkeydown = function(event) {
     // regular key down 

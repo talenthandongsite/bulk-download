@@ -5,4 +5,19 @@ Manual download of IB(Investment Bank) Data was one of main bottleneck point in 
 
 Needs for automating these process was getting bigger, since work volume of these process is punishing for one person. 1) Downloading PDF could be the first step to automate. Downloading from url is fairly simpler then other two tasks, and client(the one who do these process) specifically pick this task and put it to the top of queue.
 
-By ach
+By automating this task, the client will easily donwload multiple IB data at once, rather than clicking every download button after opening each urls.
+
+## Design
+- Web Service
+- Embeded into talent-handong.site
+- Client does form, validation
+- Server does downloading, zipping
+
+## Folder Structure
+
+
+## Main.go
+
+## Web
+
+## Deployments
