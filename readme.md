@@ -9,10 +9,11 @@ By automating this task, the client will easily donwload multiple IB data at onc
 
 ## Design
 - Web Service
-- Embeded into talent-handong.site
+- Embeded into talent-handong.site with html iframe
 - Client does form, validation
 - Server does downloading, zipping
-
+- Deploy with Github Action
+- Run with Docker
 
 
 ## Folder Structure
@@ -24,10 +25,14 @@ However, there are some folders which are other than go codes.
 - deployments
 - web
 
-'.github' hiddle folder is configuration for [Github Action](https://github.com/features/actions). This folder is containing a github action script.  
+'.github' hidden folder is configuration for [Github Action](https://github.com/features/actions). This folder is containing a github action script.  
+
 'cache' folder, as mentioned earlier it is not visible, is to cache files. As this project is about downloading certain files from some source, **cache** it somewhere, process it, and send it to user, there should be a cache folder that server will use.  
+
 'deployments' folder is somewhat seems redundant with '.github' folder, but task is separated. In deployment process, both '.github' folder and 'deployments' folder are used, but for tasks related to github(such as github action, pulling repository on server) are configured with '.github' folder and **tasks with docker** are configured from this 'deployments' folder.
+
 'web' folder is for static client website. Htmls, css, js files are sit within it.
+
 
 ## Main.go
 The main.go is simple http server application.   
@@ -36,7 +41,7 @@ It is composed of 2 endpoints.
 - /request: an endpoint for bulk download request 
 
 
-
 ## Web
+
 
 ## Deployments
