@@ -32,6 +32,7 @@ var currentUrlValid = false;
 var currentPatternValid = false;
 var currentLang = 'en';
 var isDownload = false;
+var block = false;
 
 var inputPrefixPrestine = true;
 var inputSuffixPrestine = true;
@@ -44,9 +45,11 @@ var dropdownDisplayClassName = 'show';
 var inputInvalidClassName = 'is-invalid';
 var buttonDisabledClassName = 'disabled';
 var inputDisabledAttrName = 'disabled';
+var buttonLoadingClassName = 'button-loading';
 var urlValidationRegex = /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
 var backendUrl = 'http://talent-handong.site/download/request'
+// var backendUrl = 'http://localhost:3000/request'
 
 // # Pattern Business Logic
 // - define pattern business logic
@@ -412,11 +415,39 @@ function resetDownload() {
     download.classList.add(displayNoneClassName);
 }
 
+function startBlock() {
+    inputStart.setAttribute(inputDisabledAttrName, '');
+    inputEnd.setAttribute(inputDisabledAttrName, '');
+    inputPrefix.setAttribute(inputDisabledAttrName, '');
+    inputSuffix.setAttribute(inputDisabledAttrName, '');
+    submit.classList.add(buttonLoadingClassName);
+    submit.classList.add(buttonDisabledClassName);
+
+    block = true;
+}
+
+function endBlock() {
+    inputStart.removeAttribute(inputDisabledAttrName);
+    inputEnd.removeAttribute(inputDisabledAttrName);
+    inputPrefix.removeAttribute(inputDisabledAttrName);
+    inputSuffix.removeAttribute(inputDisabledAttrName);
+    submit.classList.remove(buttonLoadingClassName);
+    submit.classList.remove(buttonDisabledClassName);
+
+    block = false;
+}
+
 // ## Backend Request Functions
 function requestBulkDownload() {
     if (!currentPatternValid || ! currentUrlValid) {
         return;
     }
+
+    if (block) {
+        return;
+    }
+
+    startBlock();
 
     var request = {
         prefix: inputPrefix.value,
@@ -437,12 +468,14 @@ function requestBulkDownload() {
             download.href = url;
             download.download = fileName;
 
+            endBlock();
             setDownload();
             return;
         }
 
         if (xhr.readyState == 4 && xhr.status != 200) {
             alert("Something went wrong! Contact Administrator");
+            endBlock();
             resetDownload();
             return;
         }
