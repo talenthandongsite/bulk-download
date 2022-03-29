@@ -21,7 +21,7 @@ const PORT string = "3000"
 const WORKDIR string = "./cache/"
 
 const FILE_COUNT_LIMIT int = 100
-const DURATION_TIME_OFFSET float64 = 0.6
+const DURATION_TIME_OFFSET float64 = 1.8
 
 type BulkDownloadInput struct {
 	Prefix  string   `json:"prefix"`
