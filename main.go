@@ -8,6 +8,7 @@ import (
 	"io/fs"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"mime"
 	"net/http"
 	"os"
@@ -16,8 +17,11 @@ import (
 	"time"
 )
 
-const PORT = "3000"
-const WORKDIR = "./cache/"
+const PORT string = "3000"
+const WORKDIR string = "./cache/"
+
+const FILE_COUNT_LIMIT int = 100
+const DURATION_TIME_OFFSET float64 = 0.6
 
 type BulkDownloadInput struct {
 	Prefix  string   `json:"prefix"`
@@ -76,9 +80,8 @@ func bulkDownload(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
-	var limit int = 100
 	// Validation, for now, only length of string
-	if len(input.Pattern) > limit {
+	if len(input.Pattern) > FILE_COUNT_LIMIT {
 		err := errors.New("download: limit exceeded")
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -95,11 +98,15 @@ func bulkDownload(w http.ResponseWriter, r *http.Request) {
 
 	// Download
 	errs := make([]error, 0)
+	seed := rand.NewSource(time.Now().UnixNano())
+	rnd := rand.New(seed)
 	for _, v := range input.Pattern {
 		err := Download(WORKDIR+workId+"/"+v, input.Prefix+v+input.Suffix)
 		if err != nil {
 			errs = append(errs, err)
 		}
+		s := time.Duration((rnd.Float64() + DURATION_TIME_OFFSET) * float64(time.Second))
+		time.Sleep(s)
 	}
 
 	warning := "download: warning: \n"
