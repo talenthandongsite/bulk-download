@@ -34,14 +34,20 @@ However, there are some folders which are other than go codes.
 'web' folder is for static client website. Htmls, css, js files are sit within it.
 
 
-## Main.go
-The main.go is simple http server application.   
+## Web
+Web service is composed of HTML-CSS-JS static file, without using any framework or library. It is consited of only one webpage; Bulk Download File page. The purpose of this page is to provide form to user so that the user can type in url and pattern.
+
+
+## Backend Server
+The backend server is simple http server application implemented with Go.
+
+Main feature of this application is to server certain endpoint with HTTP service and static file service. Http service has only one feature; get url and pattern from client -> download from that url, 
+
 It is composed of 2 endpoints.
 - /: static file server for web folder
 - /request: an endpoint for bulk download request 
 
 
-## Web
 
 
 ## Deployments
