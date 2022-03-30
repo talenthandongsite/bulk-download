@@ -34,8 +34,41 @@ However, there are some folders which are other than go codes.
 'web' folder is for static client website. Htmls, css, js files are sit within it.
 
 
-## Web
-Web service is composed of HTML-CSS-JS static file, without using any framework or library. It is consited of only one webpage; Bulk Download File page. The purpose of this page is to provide form to user so that the user can type in url and pattern.
+## Frontend
+Web folder is equivalent of frontend. The frontend is composed of HTML-CSS-JS static file, without using any framework or library. It is consited of only one webpage; Bulk Download File page. 
+
+**The final goal** of frontend is making json data which are similar to follows:
+```
+{
+    "prefix": "https://some-pdf-url.com/somePath?DocumentID=",
+    "suffix": "&AccessToken=some-access-token",
+    "pattern": [
+        "10012031",
+        "10012032"
+        "10012033",
+        "10012034",
+        "10012035"
+    ]
+}
+```
+What is it? This data representing an enumeration of URLs. When this data is received from backend server. The server can create something like follows by joining prefix + pattern + suffix:
+```
+[
+    "https://some-pdf-url.com/somePath?DocumentID=10012031&AccessToken=some-access-token",
+    "https://some-pdf-url.com/somePath?DocumentID=10012032&AccessToken=some-access-token",
+    "https://some-pdf-url.com/somePath?DocumentID=10012033&AccessToken=some-access-token",
+    "https://some-pdf-url.com/somePath?DocumentID=10012034&AccessToken=some-access-token",
+    "https://some-pdf-url.com/somePath?DocumentID=10012035&AccessToken=some-access-token"
+]
+```
+By joining prefix, pattern, suffix, the server can generate urls to call. 
+
+ser can type in url and pattern. To achieve this, the page provides 3 or 4 form fields.
+- Url Prefix
+- Url Suffix
+- Pattern Start
+- Pattern End
+
 
 
 ## Backend Server
