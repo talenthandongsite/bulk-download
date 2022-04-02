@@ -56,9 +56,13 @@ func InitHttpHandler() *http.ServeMux {
 }
 
 func bulkDownload(w http.ResponseWriter, r *http.Request) {
+
+	log.Println(r.Method, r.URL.Path, ", Host:", r.Host)
+
+	const prefix string = "download: "
 	// check method
 	if r.Method != http.MethodPost {
-		err := errors.New("download: method not allowed - " + r.Method)
+		err := errors.New(prefix + "method not allowed - " + r.Method)
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusMethodNotAllowed)
 		return
@@ -82,7 +86,7 @@ func bulkDownload(w http.ResponseWriter, r *http.Request) {
 
 	// Validation, for now, only length of string
 	if len(input.Pattern) > FILE_COUNT_LIMIT {
-		err := errors.New("download: limit exceeded")
+		err := errors.New(prefix + "limit exceeded")
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
@@ -109,7 +113,7 @@ func bulkDownload(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(s)
 	}
 
-	warning := "download: warning: \n"
+	warning := prefix + "warning: \n"
 	if len(errs) > 0 {
 		for _, v := range errs {
 			warning = warning + v.Error() + "\n"
