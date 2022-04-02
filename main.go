@@ -51,8 +51,32 @@ func InitHttpHandler() *http.ServeMux {
 	// mux.HandleFunc("/", healthCheck)
 	mux.Handle("/", fs)
 	mux.HandleFunc("/request", bulkDownload)
+	mux.HandleFunc("/report", report)
 
 	return mux
+}
+
+func report(w http.ResponseWriter, r *http.Request) {
+	const prefix string = "report: "
+
+	if r.Method != http.MethodPost {
+		err := errors.New(prefix + "method not allowed - " + r.Method)
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusMethodNotAllowed)
+		return
+	}
+
+	b, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	log.Println(prefix + "new:")
+	log.Println(b)
+
+	w.Write([]byte("ACK"))
 }
 
 func bulkDownload(w http.ResponseWriter, r *http.Request) {
