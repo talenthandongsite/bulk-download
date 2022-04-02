@@ -1,8 +1,6 @@
 // script.js
 // - Author: cocm1324@gmail.com
-
-// TODO
-// - submit
+// - Lastly Modified: 2022-03-30
 
 // # Variables Block
 // - consist of two part, html elements and state variables
@@ -39,6 +37,7 @@ var inputSuffixPrestine = true;
 var inputStartPrestine = true;
 var inputEndPrestine = true;
 
+
 // ## Constants 
 var displayNoneClassName = 'd-none';
 var dropdownDisplayClassName = 'show';
@@ -50,6 +49,7 @@ var urlValidationRegex = /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[
 
 var backendUrl = 'http://talent-handong.site/download/request'
 // var backendUrl = 'http://localhost:3000/request'
+
 
 // # Pattern Business Logic
 // - define pattern business logic
@@ -181,6 +181,7 @@ window.onkeydown = function(event) {
 // # Functions
 // - put function definitions here
 // - consist of two category 1)validators 2)state changing functions
+
 
 // ## Validator functions
 function urlValidator(urlString) {
