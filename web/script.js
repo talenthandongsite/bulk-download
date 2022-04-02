@@ -47,9 +47,11 @@ var inputDisabledAttrName = 'disabled';
 var buttonLoadingClassName = 'button-loading';
 var urlValidationRegex = /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
-var backendUrl = 'http://talent-handong.site/download/request'
-// var backendUrl = 'http://localhost:3000/request'
+var downloadRequestUrl = 'http://talent-handong.site/download/request'
+// var downloadRequestUrl = 'http://localhost:3000/request'
 
+var reportUrl = 'http://talent-handong.site/download/report'
+// var reportUrl = 'http://localhost:3000/request'
 
 // # Pattern Business Logic
 // - define pattern business logic
@@ -455,7 +457,7 @@ function requestBulkDownload() {
     }
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", backendUrl, true);
+    xhr.open("POST", downloadRequestUrl, true);
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
     xhr.onreadystatechange = function() {
@@ -473,7 +475,15 @@ function requestBulkDownload() {
         }
 
         if (xhr.readyState == 4 && xhr.status != 200) {
+            var report = {
+                status: xhr.status,
+                statusText: xhr.statusText,
+                response: xhr.response
+            };
+            reportErrorToServer(report);
+
             alert("Something went wrong! Contact Administrator");
+
             endBlock();
             resetDownload();
             return;
@@ -483,4 +493,13 @@ function requestBulkDownload() {
     }
     xhr.responseType = "arraybuffer";
     xhr.send(JSON.stringify(request));
+}
+
+function reportErrorToServer(detail) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", reportUrl, true);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+    xhr.responseType = "arraybuffer";
+    xhr.send(JSON.stringify(detail));
 }
