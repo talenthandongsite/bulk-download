@@ -74,7 +74,7 @@ func report(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println(prefix + "new:")
-	log.Println(b)
+	log.Println(string(b[:]))
 
 	w.Write([]byte("ACK"))
 }
@@ -99,6 +99,8 @@ func bulkDownload(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	log.Println(prefix + "incomming: \n" + string(b[:]))
 
 	// Json unmarshal
 	var input BulkDownloadInput
