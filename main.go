@@ -135,6 +135,7 @@ func bulkDownload(w http.ResponseWriter, r *http.Request) {
 		err := Download(WORKDIR+workId+"/"+v, input.Prefix+v+input.Suffix)
 		if err != nil {
 			errs = append(errs, err)
+			continue
 		}
 		s := time.Duration((rnd.Float64() + DURATION_TIME_OFFSET) * float64(time.Second))
 		sstr := fmt.Sprintf("%.2f", rnd.Float64()+DURATION_TIME_OFFSET)
