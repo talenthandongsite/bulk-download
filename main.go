@@ -4,6 +4,7 @@ import (
 	"archive/zip"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"io/fs"
 	"io/ioutil"
@@ -136,6 +137,8 @@ func bulkDownload(w http.ResponseWriter, r *http.Request) {
 			errs = append(errs, err)
 		}
 		s := time.Duration((rnd.Float64() + DURATION_TIME_OFFSET) * float64(time.Second))
+		sstr := fmt.Sprintf("%.2f", rnd.Float64()+DURATION_TIME_OFFSET)
+		log.Println(prefix + "sleeping " + sstr + " sec")
 		time.Sleep(s)
 	}
 
