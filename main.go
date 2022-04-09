@@ -83,8 +83,10 @@ func report(w http.ResponseWriter, r *http.Request) {
 func bulkDownload(w http.ResponseWriter, r *http.Request) {
 
 	log.Println(r.Method, r.URL.Path, ", Host:", r.Host)
-
 	const prefix string = "download: "
+
+	start := time.Now()
+
 	// check method
 	if r.Method != http.MethodPost {
 		err := errors.New(prefix + "method not allowed - " + r.Method)
@@ -173,6 +175,9 @@ func bulkDownload(w http.ResponseWriter, r *http.Request) {
 	os.Remove(WORKDIR + workId + ".zip")
 	os.RemoveAll(WORKDIR + workId + "/")
 
+	elapsed := time.Since(start)
+
+	log.Printf(prefix+"task finished - %s", elapsed)
 }
 
 func Download(filePath string, url string) error {
